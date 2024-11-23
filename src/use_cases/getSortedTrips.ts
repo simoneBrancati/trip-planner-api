@@ -15,6 +15,10 @@ export const sortTrips = (
   return trips;
 };
 
-export const sortByCheapest = (trips: Trip[]): Trip[] => {};
+export const sortByCheapest = (trips: Trip[]): Trip[] => {
+  return trips.slice().sort((a, b) => a.cost - b.cost);
+};
 
-export const sortByFastest = (trips: Trip[]): Trip[] => {};
+export const sortByFastest = (trips: Trip[]): Trip[] => {
+  return trips.slice().sort((a, b) => a.duration - b.duration);
+};
