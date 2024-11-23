@@ -1,6 +1,8 @@
+import { IATACode } from "./IATACodes";
+
 export interface Trip {
-  origin: string;
-  destination: string;
+  origin: IATACode;
+  destination: IATACode;
   cost: number;
   duration: number;
   type: TripType;
