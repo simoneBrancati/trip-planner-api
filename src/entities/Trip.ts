@@ -10,6 +10,6 @@ export interface Trip {
   display_name: string;
 }
 
-enum TripType {
-  flight = "flight",
-}
+type TripType = "flight" | "train" | "car";
+
+export type SortingStrategy = "fastest" | "cheapest";
