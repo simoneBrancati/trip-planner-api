@@ -19,7 +19,7 @@ export const getSortedTrips = async (
 ): Promise<Trip[]> => {
   // Validation
   if (!origin || !destination) {
-    throw new Error("Origin and destination must be provided.");
+    throw new Error("Origin and/or destination must be provided.");
   }
 
   if (!["cheapest", "fastest"].includes(sortBy)) {
