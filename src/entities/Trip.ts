@@ -13,3 +13,5 @@ export interface Trip {
 type TripType = "flight" | "train" | "car";
 
 export type SortingStrategy = "fastest" | "cheapest";
+
+export type SortingFunction = (trip: Trip[]) => Trip[];
