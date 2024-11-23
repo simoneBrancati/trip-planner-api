@@ -1,5 +1,5 @@
 import { Trip } from "../src/entities/Trip";
-import { sortByCheapest, sortByFastest } from "../src/use_cases/getSortedTrips";
+import { sortByCheapest, sortByFastest } from "../src/use_cases/TripSorting";
 
 describe("sortByCheapest", () => {
   it("should sort trips with lower cost first", () => {
