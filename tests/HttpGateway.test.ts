@@ -8,6 +8,8 @@ jest.mock("axios");
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+process.env.API_KEY = "testkey";
+
 describe("HttpTripGateway", () => {
   mockedAxios.create.mockReturnValue(mockedAxios);
   const gateway = HttpTripGateway();

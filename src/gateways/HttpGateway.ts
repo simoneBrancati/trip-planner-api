@@ -14,6 +14,12 @@ import { AxiosError } from "axios";
  * @returns A TripGateway instance.
  */
 export const HttpTripGateway = (timeout = 10000): TripGateway => {
+  if (!process.env.API_KEY) {
+    throw new Error(
+      "API_KEY is not set. Please configure it in the .env file.",
+    );
+  }
+
   const instance = axios.create({
     baseURL: process.env.TRIPS_API_URL,
     timeout,
