@@ -34,7 +34,7 @@ export const getTripsValidator = (
     return;
   }
 
-  if (!validateSortingStrategy(sort_by)) {
+  if (sort_by !== undefined && !validateSortingStrategy(sort_by)) {
     res.status(400).send({
       message:
         "Query parameter 'sort_by' must be one of 'fastest' or 'cheapest'.",

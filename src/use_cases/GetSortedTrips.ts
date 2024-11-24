@@ -18,7 +18,7 @@ import { getSortingFunction } from "./TripSorting";
 export const getSortedTrips = async (
   origin: IATACode,
   destination: IATACode,
-  sortBy: SortingStrategy,
+  sortBy: SortingStrategy | undefined,
   tripGateway: TripGateway,
 ): Promise<Trip[]> => {
   // Validation
@@ -26,12 +26,16 @@ export const getSortedTrips = async (
     throw new Error("Origin and/or destination must be provided.");
   }
 
-  if (!validateSortingStrategy(sortBy)) {
+  if (sortBy && !validateSortingStrategy(sortBy)) {
     throw new Error(`Invalid sorting strategy "${sortBy}".`);
   }
 
   // Fetch trips from the gateway
   const trips = await tripGateway.fetchTrips(origin, destination);
+
+  if (!sortBy) {
+    return trips;
+  }
 
   // Sorting
   const sortFunction = getSortingFunction(sortBy);

@@ -23,7 +23,7 @@ export const getTrips = async (
     const trips = await getSortedTrips(
       origin as IATACode,
       destination as IATACode,
-      sort_by as SortingStrategy,
+      sort_by as SortingStrategy | undefined,
       tripGateway,
     );
 
