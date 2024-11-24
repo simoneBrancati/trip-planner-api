@@ -1,10 +1,12 @@
 import { IATACode } from "../entities/IATACodes";
 import { SortingStrategy, Trip } from "../entities/Trip";
+import { CacheGateway } from "../gateways/CacheGateway";
 import { TripGateway } from "../gateways/TripGateway";
 import {
   validateIATACode,
   validateSortingStrategy,
 } from "../utils/Validations";
+import { fetchTrips } from "./FetchTrips";
 import { getSortingFunction } from "./TripSorting";
 
 /**
@@ -13,6 +15,7 @@ import { getSortingFunction } from "./TripSorting";
  * @param destination - Destination IATA code.
  * @param sortBy - Sorting strategy ("cheapest" or "fastest").
  * @param tripGateway - Gateway for fetching trips.
+ * @param cacheGateway - Gateway for caching trip results.
  * @returns An array of trips sorted by the specified strategy.
  */
 export const getSortedTrips = async (
@@ -20,6 +23,7 @@ export const getSortedTrips = async (
   destination: IATACode,
   sortBy: SortingStrategy | undefined,
   tripGateway: TripGateway,
+  cacheGateway: CacheGateway,
 ): Promise<Trip[]> => {
   // Validation
   if (!validateIATACode(origin) || !validateIATACode(destination)) {
@@ -31,7 +35,12 @@ export const getSortedTrips = async (
   }
 
   // Fetch trips from the gateway
-  const trips = await tripGateway.fetchTrips(origin, destination);
+  const trips = await fetchTrips(
+    cacheGateway,
+    tripGateway,
+    origin,
+    destination,
+  );
 
   if (!sortBy) {
     return trips;
