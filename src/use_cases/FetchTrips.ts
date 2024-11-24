@@ -2,6 +2,7 @@ import { IATACode } from "../entities/IATACodes";
 import { Trip } from "../entities/Trip";
 import { CacheGateway } from "../gateways/CacheGateway";
 import { TripGateway } from "../gateways/TripGateway";
+import logger from "../utils/Logger";
 
 /**
  * Fetches trips either from the cache or the 3rd party API.
@@ -23,6 +24,8 @@ export const fetchTrips = async (
   const cachedTrips = await getCachedTrips(cacheGateway, cacheKey);
 
   if (cachedTrips) {
+    logger.debug("Trips retrieved from cache");
+
     return cachedTrips;
   }
 
@@ -30,6 +33,8 @@ export const fetchTrips = async (
 
   const ttl = getTripsCacheTtl();
   cacheGateway.set(cacheKey, JSON.stringify(trips), ttl);
+
+  logger.debug("Trips retrieved from API");
 
   return trips;
 };
