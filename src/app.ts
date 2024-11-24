@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import router from "./frameworks/express/router";
-import loggingMiddleware from "./frameworks/express/middlewares/logger";
+import loggingMiddleware from "./frameworks/express/middlewares/Logger";
 import dotenv from "dotenv";
 import logger from "./utils/logger";
 import tripErrorHandler from "./frameworks/express/middlewares/TripErrorHandler";
