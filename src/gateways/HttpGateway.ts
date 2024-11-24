@@ -2,6 +2,15 @@ import axios from "axios";
 import { Trip } from "../entities/Trip";
 import { TripGateway } from "./TripGateway";
 import { IATACode } from "../entities/IATACodes";
+import logger from "../utils/logger";
+
+const instance = axios.create({
+  baseURL: process.env.TRIPS_API_URL,
+  timeout: 10000,
+  params: {
+    "x-api-key": process.env.API_KEY,
+  },
+});
 
 export const HttpTripGateway = (): TripGateway => {
   const fetchTrips = async (
@@ -9,17 +18,23 @@ export const HttpTripGateway = (): TripGateway => {
     destination: IATACode,
   ): Promise<Trip[]> => {
     try {
-      const response = await axios.get(`${process.env.TRIPS_API_URL}`, {
+      const axiosResponse = await instance.get("/trips", {
         params: { origin, destination },
       });
 
-      if (response.status !== 200) {
+      if (axiosResponse.status !== 200) {
+        logger.error("API ERROR - GET REQUEST: Failed to fetch trips from API");
         throw new Error("Failed to fetch trips from API");
       }
 
-      return response.data as Trip[];
+      return axiosResponse.data as Trip[];
     } catch (error) {
-      console.error("Error fetching trips:", error);
+      if (error instanceof Error) {
+        logger.error(`${error.message}, Stack: ${error.stack}`);
+      } else {
+        logger.error("API ERROR - GET REQUEST: Unknown Error");
+      }
+
       throw new Error("Unable to fetch trips");
     }
   };
