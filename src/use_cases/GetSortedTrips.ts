@@ -1,6 +1,10 @@
 import { IATACode } from "../entities/IATACodes";
 import { SortingStrategy, Trip } from "../entities/Trip";
 import { TripGateway } from "../gateways/TripGateway";
+import {
+  validateIATACode,
+  validateSortingStrategy,
+} from "../utils/validations";
 import { getSortingFunction } from "./TripSorting";
 
 /**
@@ -18,11 +22,11 @@ export const getSortedTrips = async (
   tripGateway: TripGateway,
 ): Promise<Trip[]> => {
   // Validation
-  if (!origin || !destination) {
+  if (!validateIATACode(origin) || !validateIATACode(destination)) {
     throw new Error("Origin and/or destination must be provided.");
   }
 
-  if (!["cheapest", "fastest"].includes(sortBy)) {
+  if (!validateSortingStrategy(sortBy)) {
     throw new Error(`Invalid sorting strategy "${sortBy}".`);
   }
 
