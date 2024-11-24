@@ -9,21 +9,28 @@ export const getTripsValidator = (
   res: Response,
   next: NextFunction,
 ) => {
-  const { origin, destination, sortBy } = req.query;
+  const { origin, destination, sort_by } = req.query;
   if (!validateIATACode(origin)) {
-    res.status(400).send({ message: "Invalid origin" });
+    res
+      .status(400)
+      .send({ message: "Query parameter 'origin' must be a valid IATA code." });
 
     return;
   }
 
   if (!validateIATACode(destination)) {
-    res.status(400).send({ message: "Invalid origin" });
+    res.status(400).send({
+      message: "Query parameter 'destination' must be a valid IATA code.",
+    });
 
     return;
   }
 
-  if (!validateSortingStrategy(sortBy)) {
-    res.status(400).send({ message: "Invalid sorting strategy: '${sortBy}'" });
+  if (!validateSortingStrategy(sort_by)) {
+    res.status(400).send({
+      message:
+        "Query parameter 'sort_by' must be one of 'fastest' or 'cheapest'.",
+    });
 
     return;
   }

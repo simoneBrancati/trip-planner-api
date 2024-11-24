@@ -9,14 +9,14 @@ export const getTrips = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const { origin, destination, sortBy } = req.query;
+  const { origin, destination, sort_by } = req.query;
   try {
     const tripGateway = HttpTripGateway();
 
     const trips = await getSortedTrips(
       origin as IATACode,
       destination as IATACode,
-      sortBy as SortingStrategy,
+      sort_by as SortingStrategy,
       tripGateway,
     );
     res.setHeader("Content-Type", "application/json").send(trips);
