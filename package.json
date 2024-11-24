@@ -5,7 +5,10 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "build": "rimraf ./build && tsc"
+    "dev": "ts-node-dev --poll src/app.ts",
+    "build": "rimraf ./build && tsc",
+    "serve": "node build/app.js",
+    "start": "npm run build && npm run serve"
   },
   "author": "Simone Brancati",
   "license": "ISC",
