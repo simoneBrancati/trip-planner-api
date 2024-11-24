@@ -7,15 +7,15 @@ import NotFoundError from "../errors/NotFoundError";
 import ServerError from "../errors/ServerError";
 import { AxiosError } from "axios";
 
-const instance = axios.create({
-  baseURL: process.env.TRIPS_API_URL,
-  timeout: 10000,
-  params: {
-    "x-api-key": process.env.API_KEY,
-  },
-});
+export const HttpTripGateway = (timeout = 10000): TripGateway => {
+  const instance = axios.create({
+    baseURL: process.env.TRIPS_API_URL,
+    timeout,
+    headers: {
+      "x-api-key": process.env.API_KEY,
+    },
+  });
 
-export const HttpTripGateway = (): TripGateway => {
   const fetchTrips = async (
     origin: IATACode,
     destination: IATACode,
