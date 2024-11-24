@@ -1,8 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Trip } from "../entities/Trip";
 import { TripGateway } from "./TripGateway";
 import { IATACode } from "../entities/IATACodes";
 import logger from "../utils/logger";
+import NotFoundError from "../errors/NotFoundError";
+import ServerError from "../errors/ServerError";
+import { AxiosError } from "axios";
 
 const instance = axios.create({
   baseURL: process.env.TRIPS_API_URL,
@@ -22,24 +25,40 @@ export const HttpTripGateway = (): TripGateway => {
         params: { origin, destination },
       });
 
-      if (axiosResponse.status !== 200) {
-        logger.error("API ERROR - GET REQUEST: Failed to fetch trips from API");
-        throw new Error("Failed to fetch trips from API");
-      }
+      handleErrors(axiosResponse);
 
       return axiosResponse.data as Trip[];
     } catch (error) {
+      if (error instanceof AxiosError) {
+        logger.error(`${error.message}, Stack: ${error.stack}`);
+        if (error.response) {
+          handleErrors(error.response);
+        } else {
+          throw new ServerError("Internal Server Error");
+        }
+      }
+
       if (error instanceof Error) {
         logger.error(`${error.message}, Stack: ${error.stack}`);
       } else {
         logger.error("API ERROR - GET REQUEST: Unknown Error");
       }
 
-      throw new Error("Unable to fetch trips");
+      throw new ServerError("Internal Server Error");
     }
   };
 
   return {
     fetchTrips,
   };
+};
+
+const handleErrors = (response: AxiosResponse) => {
+  if (response.status > 399) {
+    if (response.status === 404) {
+      throw new NotFoundError("Requested section not found");
+    }
+
+    throw new ServerError("Internal Server Error");
+  }
 };
