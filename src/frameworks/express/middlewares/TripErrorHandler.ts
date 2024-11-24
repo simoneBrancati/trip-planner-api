@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import NotFoundError from "../../../errors/NotFoundError";
 import ServerError from "../../../errors/ServerError";
-import logger from "../../../utils/logger";
+import logger from "../../../utils/Logger";
 
 /**
  * The error handler middleware for the Trip planner API.

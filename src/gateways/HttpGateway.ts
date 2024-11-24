@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { Trip } from "../entities/Trip";
 import { TripGateway } from "./TripGateway";
 import { IATACode } from "../entities/IATACodes";
-import logger from "../utils/logger";
+import logger from "../utils/Logger";
 import NotFoundError from "../errors/NotFoundError";
 import ServerError from "../errors/ServerError";
 import { AxiosError } from "axios";

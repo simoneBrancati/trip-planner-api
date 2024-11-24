@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   validateIATACode,
   validateSortingStrategy,
-} from "../../../utils/validations";
+} from "../../../utils/Validations";
 
 /**
  * Validator for the getTrips API.

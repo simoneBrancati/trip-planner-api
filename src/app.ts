@@ -1,8 +1,8 @@
 import express, { Express } from "express";
-import router from "./frameworks/express/router";
+import router from "./frameworks/express/Router";
 import loggingMiddleware from "./frameworks/express/middlewares/Logger";
 import dotenv from "dotenv";
-import logger from "./utils/logger";
+import logger from "./utils/Logger";
 import tripErrorHandler from "./frameworks/express/middlewares/TripErrorHandler";
 import globalErrorHandler from "./frameworks/express/middlewares/GlobalErrorHandler";
 

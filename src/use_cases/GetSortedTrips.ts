@@ -4,7 +4,7 @@ import { TripGateway } from "../gateways/TripGateway";
 import {
   validateIATACode,
   validateSortingStrategy,
-} from "../utils/validations";
+} from "../utils/Validations";
 import { getSortingFunction } from "./TripSorting";
 
 /**
