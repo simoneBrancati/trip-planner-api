@@ -2,7 +2,7 @@ import { SortingStrategy } from "../src/entities/Trip";
 import {
   validateIATACode,
   validateSortingStrategy,
-} from "../src/utils/validations";
+} from "../src/utils/Validations";
 
 describe("validateIATACode", () => {
   it("should return true for valid IATA codes", () => {
