@@ -19,7 +19,6 @@ export const getTrips = async (
       sort_by as SortingStrategy,
       tripGateway,
     );
-    res.setHeader("Content-Type", "application/json").send(trips);
 
     res.status(200).json(trips);
   } catch (err) {
