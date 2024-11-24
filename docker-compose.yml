@@ -5,3 +5,16 @@ services:
       target: production
     ports:
       - 3000:3000
+    depends_on:
+      - redis
+    environment:
+      - TRIPS_API_URL=https://z0qw1e7jpd.execute-api.eu-west-1.amazonaws.com/default
+      - APP_PORT=3000
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - CACHE_TTL=600
+
+  redis:
+    image: redis:7.4.0-alpine
+    ports:
+      - 6379:6379
