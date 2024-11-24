@@ -3,6 +3,15 @@ import NotFoundError from "../../../errors/NotFoundError";
 import ServerError from "../../../errors/ServerError";
 import logger from "../../../utils/logger";
 
+/**
+ * The error handler middleware for the Trip planner API.
+ *
+ * @param err Error instance.
+ * @param _
+ * @param res Express Response object.
+ * @param next Express Next function.
+ * @returns void
+ */
 const tripErrorHandler = (
   err: Error,
   _: Request,

@@ -7,6 +7,12 @@ import NotFoundError from "../errors/NotFoundError";
 import ServerError from "../errors/ServerError";
 import { AxiosError } from "axios";
 
+/**
+ * Creates a Gateway to connect business logic and the external trips API.
+ *
+ * @param timeout Http requests timeout for the 3rd party API
+ * @returns A TripGateway instance.
+ */
 export const HttpTripGateway = (timeout = 10000): TripGateway => {
   const instance = axios.create({
     baseURL: process.env.TRIPS_API_URL,
@@ -16,6 +22,13 @@ export const HttpTripGateway = (timeout = 10000): TripGateway => {
     },
   });
 
+  /**
+   * Performs an HTTP GET Request to 3rd party API to retrieve trip objects.
+   *
+   * @param origin - Origin IATA code.
+   * @param destination - Destination IATA code.
+   * @returns A list of Trips.
+   */
   const fetchTrips = async (
     origin: IATACode,
     destination: IATACode,
@@ -31,18 +44,18 @@ export const HttpTripGateway = (timeout = 10000): TripGateway => {
     } catch (error) {
       if (error instanceof AxiosError) {
         logger.error(`${error.message}, Stack: ${error.stack}`);
-        if (error.response) {
-          handleErrors(error.response);
-        } else {
+        if (!error.response) {
           throw new ServerError("Internal Server Error");
         }
+
+        handleErrors(error.response);
       }
 
-      if (error instanceof Error) {
-        logger.error(`${error.message}, Stack: ${error.stack}`);
-      } else {
-        logger.error("API ERROR - GET REQUEST: Unknown Error");
-      }
+      const logMsg =
+        error instanceof Error
+          ? `${error.message}, Stack: ${error.stack}`
+          : "API ERROR - GET REQUEST: Unknown Error";
+      logger.error(logMsg);
 
       throw new ServerError("Internal Server Error");
     }
@@ -53,6 +66,11 @@ export const HttpTripGateway = (timeout = 10000): TripGateway => {
   };
 };
 
+/**
+ * Handles potential errors coming from the AxiosResponse.
+ *
+ * @param response An instance of AxiosResponse
+ */
 const handleErrors = (response: AxiosResponse) => {
   if (response.status > 399) {
     if (response.status === 404) {

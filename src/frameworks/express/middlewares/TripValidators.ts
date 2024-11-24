@@ -4,6 +4,14 @@ import {
   validateSortingStrategy,
 } from "../../../utils/validations";
 
+/**
+ * Validator for the getTrips API.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ * @returns void
+ */
 export const getTripsValidator = (
   req: Request,
   res: Response,

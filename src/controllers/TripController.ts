@@ -4,6 +4,13 @@ import { HttpTripGateway } from "../gateways/HttpGateway";
 import { IATACode } from "../entities/IATACodes";
 import { SortingStrategy } from "../entities/Trip";
 
+/**
+ * Controller function that connects the business core logic to the express application framework.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ */
 export const getTrips = async (
   req: Request,
   res: Response,
