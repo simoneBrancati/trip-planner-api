@@ -74,7 +74,7 @@ export const HttpTripGateway = (timeout = 10000): TripGateway => {
 const handleErrors = (response: AxiosResponse) => {
   if (response.status > 399) {
     if (response.status === 404) {
-      throw new NotFoundError("Requested section not found");
+      throw new NotFoundError("Requested resource not found");
     }
 
     throw new ServerError("Internal Server Error");
