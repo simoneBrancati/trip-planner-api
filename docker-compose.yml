@@ -7,14 +7,22 @@ services:
       - 3000:3000
     depends_on:
       - redis
+      - mongo
     environment:
       - TRIPS_API_URL=https://z0qw1e7jpd.execute-api.eu-west-1.amazonaws.com/default
       - APP_PORT=3000
       - REDIS_PORT=6379
       - REDIS_HOST=redis
       - CACHE_TTL=600
-
+      - MONGO_URI=mongodb://mongo:27017
+      - TRIPS_MONGO_DBNAME=tripsdb
+      - TRIPS_MONGO_COLLNAME=tripscoll
   redis:
     image: redis:7.4.0-alpine
     ports:
       - 6379:6379
+  mongo:
+    image: mongo:8.0
+    container_name: mongo
+    ports:
+      - 27017:27017
