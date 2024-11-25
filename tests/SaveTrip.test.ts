@@ -8,7 +8,7 @@ const createMockTripsRepository = () => {
   } as unknown as TripsRepository;
 };
 
-describe("getSortedTrips", () => {
+describe("saveTrip", () => {
   let mockSave: jest.Mock;
   let mockTripsRepository: TripsRepository;
 
