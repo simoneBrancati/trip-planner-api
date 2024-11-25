@@ -1,5 +1,9 @@
 import express from "express";
-import { getTrips, saveTrip } from "../../controllers/TripController";
+import {
+  getTrips,
+  listSavedTrips,
+  saveTrip,
+} from "../../controllers/TripController";
 import {
   getTripsValidator,
   saveTripValidator,
@@ -8,6 +12,7 @@ import {
 const router = express.Router();
 
 router.get("/trips", getTripsValidator, getTrips);
-router.post("/trip", saveTripValidator, saveTrip);
+router.post("/my-trip", saveTripValidator, saveTrip);
+router.get("/my-trips", listSavedTrips);
 
 export default router;
