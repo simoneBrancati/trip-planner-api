@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   validateIATACode,
   validateSortingStrategy,
+  validateTrip,
 } from "../../../utils/Validations";
 
 /**
@@ -39,6 +40,29 @@ export const getTripsValidator = (
       message:
         "Query parameter 'sort_by' must be one of 'fastest' or 'cheapest'.",
     });
+
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Validator for the saveTrip API.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ * @returns void
+ */
+export const saveTripValidator = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { trip } = req.query;
+  if (!validateTrip(trip)) {
+    res.status(400).send({ message: "Input trip is not valid" });
 
     return;
   }
