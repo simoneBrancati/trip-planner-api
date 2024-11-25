@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getSortedTrips } from "../use_cases/GetSortedTrips";
 import { saveTrip as logicSaveTrip } from "../use_cases/SaveTrip";
+import { listSavedTrips as logicListSavedTrips } from "../use_cases/ListSavedTrips";
 import { HttpTripGateway } from "../gateways/HttpGateway";
 import { IATACode } from "../entities/IATACodes";
 import { SortingStrategy, Trip } from "../entities/Trip";
@@ -59,6 +60,30 @@ export const saveTrip = async (
     const savedTrip = await logicSaveTrip(trip as Trip, repositoryGateway);
 
     res.status(200).json({ trip: savedTrip });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Controller function that connects the business core logic to the express application framework.
+ * List saved trips from the repository.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ */
+export const listSavedTrips = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const repositoryGateway = MongoRepositoryGateway();
+
+    const trips = await logicListSavedTrips(repositoryGateway);
+
+    res.status(200).json({ trips });
   } catch (err) {
     next(err);
   }

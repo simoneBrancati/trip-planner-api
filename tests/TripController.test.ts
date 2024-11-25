@@ -1,4 +1,8 @@
-import { getTrips, saveTrip } from "../src/controllers/TripController";
+import {
+  getTrips,
+  listSavedTrips,
+  saveTrip,
+} from "../src/controllers/TripController";
 import { HttpTripGateway } from "../src/gateways/HttpGateway";
 import { Request, Response } from "express";
 import { Trip } from "../src/entities/Trip";
@@ -203,5 +207,59 @@ describe("saveTrip Controller", () => {
     expect(next).toHaveBeenCalled();
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();
+  });
+});
+
+describe("listSavedTrips Controller", () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let next: jest.Mock;
+
+  beforeEach(() => {
+    req = {};
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    next = jest.fn();
+
+    jest.clearAllMocks();
+  });
+
+  it("should respond with saved trips", async () => {
+    const mockTrips: Trip[] = [
+      {
+        origin: "ATL",
+        destination: "LAX",
+        cost: 5351,
+        duration: 4,
+        type: "flight",
+        id: "9d229cdc-906b-4fcc-b6d0-f672e8581376",
+        display_name: "from ATL to LAX by flight",
+      },
+      {
+        origin: "ATL",
+        destination: "LAX",
+        cost: 6542,
+        duration: 6,
+        type: "train",
+        id: "8bdb00be-9706-481d-80e7-7634dc438b25",
+        display_name: "from ATL to LAX by train",
+      },
+    ];
+
+    const findAll = jest.fn().mockResolvedValue(mockTrips);
+    mockRepositoryGateway.mockReturnValue({
+      findAll,
+    } as unknown as TripsRepository);
+
+    await listSavedTrips(req as Request, res as Response, next);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      trips: mockTrips,
+    });
   });
 });
