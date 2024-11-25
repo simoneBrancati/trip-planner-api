@@ -2,11 +2,16 @@ import { getTrips } from "../src/controllers/TripController";
 import { HttpTripGateway } from "../src/gateways/HttpGateway";
 import { Request, Response } from "express";
 import { Trip } from "../src/entities/Trip";
+import { RedisCacheGateway } from "../src/gateways/RedisGateway";
 
 jest.mock("../src/gateways/HttpGateway");
+jest.mock("../src/gateways/RedisGateway");
 
 const mockHttpTripGateway = HttpTripGateway as jest.MockedFunction<
   typeof HttpTripGateway
+>;
+const mockRedisGateway = RedisCacheGateway as jest.MockedFunction<
+  typeof RedisCacheGateway
 >;
 
 describe("getTrips Controller", () => {
@@ -58,6 +63,13 @@ describe("getTrips Controller", () => {
     const fetchTrips = jest.fn().mockResolvedValue(mockTrips);
     mockHttpTripGateway.mockReturnValue({ fetchTrips });
 
+    const cacheGet = jest.fn().mockResolvedValue(null);
+    const cacheSet = jest.fn().mockResolvedValue(true);
+    mockRedisGateway.mockReturnValue({
+      get: cacheGet,
+      set: cacheSet,
+    });
+
     await getTrips(req as Request, res as Response, next);
 
     expect(res.status).toHaveBeenCalledWith(200);
@@ -88,6 +100,12 @@ describe("getTrips Controller", () => {
 
     const fetchTrips = jest.fn().mockRejectedValue(error);
     mockHttpTripGateway.mockReturnValue({ fetchTrips });
+    const cacheGet = jest.fn().mockResolvedValue(null);
+    const cacheSet = jest.fn().mockResolvedValue(true);
+    mockRedisGateway.mockReturnValue({
+      get: cacheGet,
+      set: cacheSet,
+    });
 
     await getTrips(req as Request, res as Response, next);
 
