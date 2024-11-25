@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.get("/trips", getTripsValidator, getTrips);
-router.post("/my-trip", saveTripValidator, saveTrip);
+router.post("/my-trip", express.json(), saveTripValidator, saveTrip);
 router.get("/my-trips", listSavedTrips);
 
 export default router;
