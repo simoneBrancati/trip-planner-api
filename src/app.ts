@@ -13,6 +13,8 @@ const app: Express = express();
 // Custom logger
 app.use(loggingMiddleware);
 
+app.use(express.json());
+
 app.use("/trip-planner/", router);
 
 // Error Handler for the trip-planner routes
