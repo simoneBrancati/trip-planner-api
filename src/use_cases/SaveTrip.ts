@@ -11,7 +11,7 @@ import { validateTrip } from "../utils/Validations";
  * @returns the saved trip
  */
 export const saveTrip = async (
-  trip: Trip | undefined,
+  trip: Trip,
   tripsRepository: TripsRepository,
 ): Promise<Trip> => {
   if (!validateTrip(trip)) {

@@ -52,14 +52,11 @@ export const saveTrip = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const { trip } = req.query;
+  const { trip } = req.body;
   try {
     const repositoryGateway = MongoRepositoryGateway();
 
-    const savedTrip = await logicSaveTrip(
-      trip as Trip | undefined,
-      repositoryGateway,
-    );
+    const savedTrip = await logicSaveTrip(trip as Trip, repositoryGateway);
 
     res.status(200).json({ trip: savedTrip });
   } catch (err) {

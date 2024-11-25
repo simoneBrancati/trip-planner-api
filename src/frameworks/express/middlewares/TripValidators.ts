@@ -60,7 +60,7 @@ export const saveTripValidator = (
   res: Response,
   next: NextFunction,
 ) => {
-  const { trip } = req.query;
+  const { trip } = req.body;
   if (!validateTrip(trip)) {
     res.status(400).send({ message: "Input trip is not valid" });
 
