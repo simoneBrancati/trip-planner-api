@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  isNonEmptyString,
   validateIATACode,
   validateSortingStrategy,
   validateTrip,
@@ -63,6 +64,31 @@ export const saveTripValidator = (
   const { trip } = req.body;
   if (!validateTrip(trip)) {
     res.status(400).send({ message: "Input trip is not valid" });
+
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Validator for the deleteTrip API.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ * @returns void
+ */
+export const deleteTripValidator = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { id } = req.query;
+  if (!isNonEmptyString(id)) {
+    res
+      .status(400)
+      .send({ message: "Required parameter 'id' missing or not valid" });
 
     return;
   }
