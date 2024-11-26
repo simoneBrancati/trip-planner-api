@@ -23,9 +23,10 @@ replacing `your_api_key_here` with the API key provided by the third-party servi
 docker compose up
 ```
 
+### Read **API usage** below or [**try it with Swagger UI**](https://simonebrancati.github.io/trip-planner-api)
+
 ## API Usage ([Check full api documentation here](APIDOC.md))
 
-## [Try it with Swagger UI](https://simonebrancati.github.io/trip-planner-api)
 
 #### **1. Retrieve Sorted Trips**
 
