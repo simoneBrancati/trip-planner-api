@@ -59,7 +59,7 @@ paths:
                         display_name:
                           type: string
 
-  /my-trip:
+  /trip-planner/my-trip:
     post:
       summary: Save a trip
       description: Saves a new trip to the database.
@@ -119,7 +119,7 @@ paths:
         '400':
           description: Missing or invalid id parameter.
 
-  /my-trips:
+  /trip-planner/my-trips:
     get:
       summary: List saved trips
       description: Retrieves all saved trips from the database.

@@ -28,7 +28,7 @@ Retrieves a list of trips optionally sorted based on the specified criteria.
 | ---- | ----------- |
 | 200 | A list of trips sorted as requested. |
 
-### /my-trip
+### /trip-planner/my-trip
 
 #### POST
 ##### Summary:
@@ -69,7 +69,7 @@ Deletes a saved trip from the database.
 | 400 | Missing or invalid id parameter. |
 | 404 | Trip not found. |
 
-### /my-trips
+### /trip-planner/my-trips
 
 #### GET
 ##### Summary:
