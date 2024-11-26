@@ -14,20 +14,13 @@ import { getGithubPageCors } from "./Cors";
 
 const router = express.Router();
 
-router.get("/trips", getGithubPageCors(["GET"]), getTripsValidator, getTrips);
-router.post(
-  "/my-trip",
-  getGithubPageCors(["POST", "OPTIONS"]),
-  express.json(),
-  saveTripValidator,
-  saveTrip,
-);
-router.get("/my-trips", getGithubPageCors(["GET"]), listSavedTrips);
-router.delete(
-  "/my-trip",
-  getGithubPageCors(["DELETE", "OPTIONS"]),
-  deleteTripValidator,
-  deleteTrip,
-);
+const getCors = getGithubPageCors(["GET"]);
+const postCors = getGithubPageCors(["POST", "OPTIONS"]);
+const deleteCors = getGithubPageCors(["DELETE", "OPTIONS"]);
+
+router.get("/trips", getCors, getTripsValidator, getTrips);
+router.post("/my-trip", postCors, express.json(), saveTripValidator, saveTrip);
+router.get("/my-trips", getCors, listSavedTrips);
+router.delete("/my-trip", deleteCors, deleteTripValidator, deleteTrip);
 
 export default router;
