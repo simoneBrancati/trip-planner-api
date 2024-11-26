@@ -1,0 +1,176 @@
+openapi: 3.1.0
+info:
+  title: Trip Planner API
+  version: 1.0.0
+  description: An HTTP RESTful API to manage trips
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /trip-planner/trips:
+    get:
+      summary: Retrieve sorted trips
+      description: Retrieves a list of trips optionally sorted based on the specified criteria.
+      parameters:
+        - name: origin
+          in: query
+          required: true
+          description: The IATA code for the trip's origin (e.g., ATL, LAX).
+          schema:
+            type: string
+        - name: destination
+          in: query
+          required: true
+          description: The IATA code for the trip's destination.
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          required: false
+          description: Sorting strategy for the trips.
+          schema:
+            type: string
+            enum: [cheapest, fastest]
+      responses:
+        '200':
+          description: A list of trips sorted as requested.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trips:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        origin:
+                          type: string
+                        destination:
+                          type: string
+                        cost:
+                          type: number
+                        duration:
+                          type: number
+                        type:
+                          type: string
+                        display_name:
+                          type: string
+
+  /my-trip:
+    post:
+      summary: Save a trip
+      description: Saves a new trip to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trip:
+                  $ref: '#/components/schemas/Trip'
+      responses:
+        '200':
+          description: Trip saved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trip:
+                    $ref: '#/components/schemas/Trip'
+        '400':
+          description: Invalid request payload.
+
+    delete:
+      summary: Delete a trip
+      description: Deletes a saved trip from the database.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: The ID of the trip to delete.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Trip deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Confirmation of the deletion.
+        '404':
+          description: Trip not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message indicating the trip was not found.
+        '400':
+          description: Missing or invalid id parameter.
+
+  /my-trips:
+    get:
+      summary: List saved trips
+      description: Retrieves all saved trips from the database.
+      responses:
+        '200':
+          description: A list of all trips saved by the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trips:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Trip'
+
+components:
+  schemas:
+    Trip:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the trip.
+        origin:
+          type: string
+          description: IATA code of the trip's origin (e.g., ATL, LAX).
+        destination:
+          type: string
+          description: IATA code of the trip's destination.
+        cost:
+          type: number
+          description: Cost of the trip.
+        duration:
+          type: number
+          description: Duration of the trip in minutes.
+        type:
+          type: string
+          description: Type of the trip. (possible values are train, car, flight)
+          enum:
+            - train
+            - car
+            - flight
+        display_name:
+          type: string
+          description: Human-readable description of the trip.
+      required:
+        - id
+        - origin
+        - destination
+        - cost
+        - duration
+        - type
+        - display_name
