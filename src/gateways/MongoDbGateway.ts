@@ -1,7 +1,7 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, MongoServerError } from "mongodb";
 import { Trip } from "../entities/Trip";
-import ServerError from "../errors/ServerError";
 import { TripsRepository } from "./TripsRepositoryGateway";
+import ConflictError from "../errors/ConflictError";
 
 /**
  * Creates a MongoDB Repository Gateway.
@@ -11,9 +11,17 @@ import { TripsRepository } from "./TripsRepositoryGateway";
 export const MongoRepositoryGateway = (): TripsRepository => {
   const save = async (trip: Trip): Promise<Trip> => {
     await connect();
-    const result = await getCollection().insertOne(trip);
-    if (!result.insertedId) {
-      throw new ServerError("Failed to save trip");
+    try {
+      await getCollection().insertOne({
+        ...trip,
+        _id: trip.id,
+      });
+    } catch (err) {
+      if (err instanceof MongoServerError && err.code === 11000) {
+        throw new ConflictError("A trip with the same ID already exists.");
+      }
+
+      throw err;
     }
 
     return trip;
@@ -21,12 +29,26 @@ export const MongoRepositoryGateway = (): TripsRepository => {
 
   const findAll = async (): Promise<Trip[]> => {
     await connect();
-    return getCollection().find<Trip>({}).toArray();
+    const tripDocuments = await getCollection()
+      .find<TripDocument>({})
+      .toArray();
+
+    return tripDocuments.map((doc) => {
+      return {
+        origin: doc.origin,
+        destination: doc.destination,
+        cost: doc.cost,
+        duration: doc.duration,
+        type: doc.type,
+        id: doc.id,
+        display_name: doc.display_name,
+      };
+    });
   };
 
   const deleteById = async (id: string): Promise<boolean> => {
     await connect();
-    const result = await getCollection().deleteOne({ id });
+    const result = await getCollection().deleteOne({ _id: id });
     return result.deletedCount === 1;
   };
 
@@ -57,7 +79,7 @@ const getCollection = () => {
 
   return getClient()
     .db(process.env.TRIPS_MONGO_DBNAME)
-    .collection(process.env.TRIPS_MONGO_COLLNAME);
+    .collection<TripDocument>(process.env.TRIPS_MONGO_COLLNAME);
 };
 
 let isConnected = false;
@@ -69,5 +91,5 @@ const connect = async () => {
 };
 
 export interface TripDocument extends Trip {
-  _id: ObjectId;
+  _id: string;
 }
