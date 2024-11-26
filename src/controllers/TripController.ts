@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { getSortedTrips } from "../use_cases/GetSortedTrips";
 import { saveTrip as logicSaveTrip } from "../use_cases/SaveTrip";
 import { listSavedTrips as logicListSavedTrips } from "../use_cases/ListSavedTrips";
+import { deleteTrip as logicDeleteTrip } from "../use_cases/DeleteTrip";
 import { HttpTripGateway } from "../gateways/HttpGateway";
 import { IATACode } from "../entities/IATACodes";
 import { SortingStrategy, Trip } from "../entities/Trip";
@@ -84,6 +85,39 @@ export const listSavedTrips = async (
     const trips = await logicListSavedTrips(repositoryGateway);
 
     res.status(200).json({ trips });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * Controller function that connects the business core logic to the express application framework.
+ * Delete a saved trip from the repository.
+ *
+ * @param req Express Request object.
+ * @param res Express Response object.
+ * @param next Express Next function.
+ */
+export const deleteTrip = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { id } = req.query;
+
+    const repositoryGateway = MongoRepositoryGateway();
+
+    const success = await logicDeleteTrip(id as string, repositoryGateway);
+    if (!success) {
+      res.status(404).json({ error: `Trip with id '${id}' not found` });
+
+      return;
+    }
+
+    res
+      .status(200)
+      .json({ message: `Trip with id '${id}' deleted successfully` });
   } catch (err) {
     next(err);
   }

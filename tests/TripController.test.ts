@@ -1,4 +1,5 @@
 import {
+  deleteTrip,
   getTrips,
   listSavedTrips,
   saveTrip,
@@ -261,5 +262,66 @@ describe("listSavedTrips Controller", () => {
     expect(res.json).toHaveBeenCalledWith({
       trips: mockTrips,
     });
+  });
+});
+
+describe("deleteTrip Controller", () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let next: jest.Mock;
+
+  beforeEach(() => {
+    req = {
+      query: {
+        id: "1234",
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    next = jest.fn();
+
+    jest.clearAllMocks();
+  });
+
+  it("should respond with successful deletion", async () => {
+    const deleteById = jest.fn().mockResolvedValue(true);
+    mockRepositoryGateway.mockReturnValue({
+      deleteById,
+    } as unknown as TripsRepository);
+
+    await deleteTrip(req as Request, res as Response, next);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Trip with id '1234' deleted successfully",
+    });
+  });
+
+  it("should respond with a 404 error if trip to delete is not found", async () => {
+    const deleteById = jest.fn().mockResolvedValue(false);
+    mockRepositoryGateway.mockReturnValue({
+      deleteById,
+    } as unknown as TripsRepository);
+
+    await deleteTrip(req as Request, res as Response, next);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Trip with id '1234' not found",
+    });
+  });
+
+  it("should call next with an error if id is missing", async () => {
+    req.query = {};
+
+    await deleteTrip(req as Request, res as Response, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 });
