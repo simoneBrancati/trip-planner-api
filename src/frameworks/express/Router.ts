@@ -10,12 +10,24 @@ import {
   saveTripValidator,
   deleteTripValidator,
 } from "./middlewares/TripValidators";
+import { getGithubPageCors } from "./Cors";
 
 const router = express.Router();
 
-router.get("/trips", getTripsValidator, getTrips);
-router.post("/my-trip", express.json(), saveTripValidator, saveTrip);
-router.get("/my-trips", listSavedTrips);
-router.delete("/my-trip", deleteTripValidator, deleteTrip);
+router.get("/trips", getGithubPageCors(["GET"]), getTripsValidator, getTrips);
+router.post(
+  "/my-trip",
+  getGithubPageCors(["POST", "OPTIONS"]),
+  express.json(),
+  saveTripValidator,
+  saveTrip,
+);
+router.get("/my-trips", getGithubPageCors(["GET"]), listSavedTrips);
+router.delete(
+  "/my-trip",
+  getGithubPageCors(["DELETE", "OPTIONS"]),
+  deleteTripValidator,
+  deleteTrip,
+);
 
 export default router;
