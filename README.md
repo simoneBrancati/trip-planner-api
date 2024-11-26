@@ -25,6 +25,8 @@ docker compose up
 
 ## API Usage ([Check full api documentation here](APIDOC.md))
 
+## [Try it with Swagger UI](https://simonebrancati.github.io/trip-planner-api)
+
 #### **1. Retrieve Sorted Trips**
 
 **Endpoint:**  
