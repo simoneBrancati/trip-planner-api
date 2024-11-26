@@ -23,7 +23,7 @@ replacing `your_api_key_here` with the API key provided by the third-party servi
 docker compose up
 ```
 
-## API Usage
+## API Usage ([Check full api documentation here](APIDOC.md))
 
 #### **1. Retrieve Sorted Trips**
 
